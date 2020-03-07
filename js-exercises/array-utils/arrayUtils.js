@@ -1,22 +1,18 @@
-//first argument array is on which forEach is getting called.
 function forEach(array, callback, thisValue) {
-  // check if callback is a valid function
   if (!(callback instanceof Function)) {
-    throw new Error("Not a valid callback");
+    throw new Error(`Expected callback to be function got ${typeof callback}`);
   }
-  if (Array.isArray(array)) {
-    for (let index = 0; index < array.length; index++) {
-      let individualElementOfArray = array[index];
-      //check if the individualElementOfArray is not empty
-      if (!(array.hasOwnProperty(index) === false && individualElementOfArray === undefined)) {
-        if (Boolean(thisValue)) {
-          callback.bind(thisValue);
-        }
-        callback(individualElementOfArray, index, array);
+  if (!Array.isArray(array)) {
+    throw new Error(`Expected first argument to be array but got ${typeof array}`);
+  }
+  for (let index = 0; index < array.length; index++) {
+    let valueAtIndexIsEmpty = value => value === undefined;
+    if (!valueAtIndexIsEmpty(array[index], index)) {
+      if (Boolean(thisValue)) {
+        callback.bind(thisValue);
       }
+      callback(array[index], index, array);
     }
-  } else {
-    throw new Error("Not a valid array");
   }
 }
 
