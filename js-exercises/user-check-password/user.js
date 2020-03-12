@@ -3,7 +3,7 @@ function User(username, password) {
   this.password = password;
 }
 
-User.prototype.checkPassword = function checkPassword(password) {
+User.prototype.checkPassword = function(password) {
   return this.password === password;
 };
 
