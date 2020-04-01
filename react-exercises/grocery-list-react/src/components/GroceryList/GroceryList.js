@@ -85,6 +85,11 @@ class GroceryList extends Component {
 	render() {
 		return (
 			<div className='GroceryListMain'>
+				<h2 className='Heading'>List of Groceries</h2>
+				<GroceryItems
+					entries={this.state.items}
+					toggle={this.togglePurchaseClass}
+				/>
 				<div className='header'>
 					<form onSubmit={this.addItem}>
 						<input
@@ -92,15 +97,10 @@ class GroceryList extends Component {
 							placeholder='Enter Item'></input>
 						<button type='submit'>Add</button>
 					</form>
-					<button type='submit' onClick={this.clearAllItems}>
+					<button id ="removeAll" type='submit' onClick={this.clearAllItems}>
 						Remove All
 					</button>
 				</div>
-				<h2 className='Heading'>Grocery List</h2>
-				<GroceryItems
-					entries={this.state.items}
-					toggle={this.togglePurchaseClass}
-				/>
 			</div>
 		);
 	}
