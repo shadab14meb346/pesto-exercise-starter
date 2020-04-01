@@ -1,0 +1,38 @@
+.GroceryListMain {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  border:2px solid rgb(131, 52, 151);
+}
+.GroceryListMain .header input {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #FFF;
+  width: 165px;
+  text-align: left;
+}
+
+.GroceryListMain .header button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #0066FF;
+  color: #FFF;
+  border: 2px solid #0066FF;
+}
+.GroceryListMain .header button:hover {
+  background-color: #003399;
+  border: 2px solid #003399;
+  cursor: pointer;
+}
+.Heading {
+  color:#FFF;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 0px; 
+  background-color: #0066FF;
+  border: 2px solid #0066FF;
+}
+#removeAll {
+  margin-top: 10px;
+  width: 100%;
+}
