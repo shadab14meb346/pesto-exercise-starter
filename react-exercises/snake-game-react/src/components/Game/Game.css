@@ -1,0 +1,27 @@
+.Game {
+  height: 500px;
+  width: 500px;
+  background-color: #00ffff;
+  margin: auto;
+  /* border: 5px solid black; */
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.pixel {
+  border: 1px solid red;
+  width: 48px;
+  height: 48px;
+}
+
+.is-head {
+  background-color: black;
+}
+.is-tail {
+  background-color: green;
+}
+
+.button {
+  height: 100px;
+}
