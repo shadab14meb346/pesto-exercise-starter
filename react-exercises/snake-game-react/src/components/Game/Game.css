@@ -1,0 +1,10 @@
+.Game {
+  height: 500px;
+  width: 500px;
+  background-color: #00ffff;
+  margin: auto;
+  border: 5px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}

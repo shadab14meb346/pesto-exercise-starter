@@ -1,0 +1,31 @@
+.game-over {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  background-color: #00ffff;
+  font-family: 'Balsamiq Sans';
+}
+
+.heading {
+  font-size: 60px;
+}
+
+.sub-heading {
+  font-size: 50px;
+}
+
+.score {
+  font-size: 50px;
+}
+
+.restart {
+  width: 250px;
+  height: 100px;
+  background-color: #deebeb;
+  font-size: 60px;
+  margin-bottom: 60px;
+}
