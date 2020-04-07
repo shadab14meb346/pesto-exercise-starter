@@ -1,3 +1,5 @@
 .snake {
-  background-color: green !important;
+  background-color: #ffff00 !important;
+  border: 2px solid #009e0f;
+  border-radius: 5px;
 }

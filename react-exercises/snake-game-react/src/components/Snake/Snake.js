@@ -1,22 +1,47 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { getRandomPixel } from "../../utils/utils";
+import GameOver from "../GameOver/GameOver";
 import "./Snake.css";
-// Tick function
-function gameTick(currentDirection, snake, setSnake, food, setFood, setScore) {
+const rowNumber = 20;
+const columnNumber = 20;
+const ceilWidth = 25;
+
+function resetGame(setSnake, setCurrentDirection, setScore) {
+	const body1 = { row: 5 * ceilWidth, column: 0 * ceilWidth };
+	const body2 = { row: 5 * ceilWidth, column: 1 * ceilWidth };
+	const body3 = { row: 5 * ceilWidth, column: 2 * ceilWidth };
+	const body4 = { row: 5 * ceilWidth, column: 3 * ceilWidth };
+	setSnake([body1, body2, body3, body4]);
+	setCurrentDirection("down");
+}
+function gameTick(
+	currentDirection,
+	setCurrentDirection,
+	snake,
+	setSnake,
+	food,
+	setFood,
+	setScore,
+	setDie,
+	die,
+) {
+	if (die) {
+		resetGame(setSnake, setCurrentDirection);
+	}
 	const snakeHead = snake[snake.length - 1];
 	let { row, column } = snakeHead;
 
-	if (
-		snakeHead.row / 50 === food.row &&
-		snakeHead.column / 50 === food.column
-	) {
+	if (snakeHead.row === food.row && snakeHead.column === food.column) {
 		// Snake ate the food, time to show set new food
-		const newHead = { row: food.row * 50, column: food.column * 50 };
+		const newHead = {
+			row: food.row,
+			column: food.column,
+		};
 		setSnake((prevState) => {
 			prevState.push(newHead);
 			return prevState;
 		});
-		setFood(getRandomPixel(10, 10));
+		setFood(getRandomPixel(rowNumber, columnNumber));
 		// increase the score
 		setScore((prevState) => {
 			return prevState + 1;
@@ -25,28 +50,53 @@ function gameTick(currentDirection, snake, setSnake, food, setFood, setScore) {
 	// Snake moves head
 	switch (currentDirection) {
 		case "left":
-			row = row - 50;
+			row = row - ceilWidth;
 			break;
 		case "up":
-			column = column - 50;
+			column = column - ceilWidth;
 			break;
 		case "down":
-			column = column + 50;
+			column = column + ceilWidth;
 			break;
 		case "right":
-			row = row + 50;
+			row = row + ceilWidth;
 			break;
 		default:
 			break;
 	}
 	let newHead = { row, column };
+	if (boundaryCollision(newHead)) {
+		setDie(true);
+	}
+	if (selfCollision(newHead, snake)) {
+		setDie(true);
+	}
 	setSnake((prevState) => {
 		const removedTailSnake = prevState.slice(1);
 		return [...removedTailSnake, newHead];
 	});
 }
 
-// function
+function boundaryCollision(head) {
+	const { row, column } = head;
+	const rowWidth = rowNumber * ceilWidth;
+	const columnHeight = columnNumber * ceilWidth;
+	if (row < 0 || column < 0 || row >= rowWidth || column >= columnHeight) {
+		return true;
+	}
+	return false;
+}
+
+function selfCollision(head, snake) {
+	const { row, column } = head;
+	for (const part of snake) {
+		if (part.row === row && part.column === column) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function Snake({
 	currentDirection,
 	setCurrentDirection,
@@ -54,29 +104,27 @@ function Snake({
 	setFood,
 	speed,
 	setScore,
+	score,
+	setStart,
 }) {
-	const body1 = { row: 5 * 50, column: 0 * 50 };
-	const body2 = { row: 5 * 50, column: 1 * 50 };
-	const body3 = { row: 5 * 50, column: 2 * 50 };
-	const body4 = { row: 5 * 50, column: 3 * 50 };
+	const body1 = { row: 5 * ceilWidth, column: 0 * ceilWidth };
+	const body2 = { row: 5 * ceilWidth, column: 1 * ceilWidth };
+	const body3 = { row: 5 * ceilWidth, column: 2 * ceilWidth };
+	const body4 = { row: 5 * ceilWidth, column: 3 * ceilWidth };
 	const [snake, setSnake] = useState([body1, body2, body3, body4]);
-	// function that handles key Press
+	const [die, setDie] = useState(false);
 	function handleKeyPress(e) {
 		switch (e.keyCode) {
 			case 37:
-				console.log("left");
 				setCurrentDirection("left");
 				break;
 			case 38:
-				console.log("up");
 				setCurrentDirection("up");
 				break;
 			case 39:
-				console.log("right");
 				setCurrentDirection("right");
 				break;
 			case 40:
-				console.log("down");
 				setCurrentDirection("down");
 				break;
 			default:
@@ -90,24 +138,37 @@ function Snake({
 
 	useEffect(() => {
 		const inter = setInterval(() => {
-			gameTick(currentDirection, snake, setSnake, food, setFood, setScore);
+			gameTick(
+				currentDirection,
+				setCurrentDirection,
+				snake,
+				setSnake,
+				food,
+				setFood,
+				setScore,
+				setDie,
+				die,
+			);
 		}, speed);
 		return () => clearInterval(inter);
 	}, [currentDirection, snake, food]);
-
-	return snake.map((element) => {
-		return (
-			<div
-				style={{
-					width: "50px",
-					height: "50px",
-					position: "absolute",
-					left: `${element.row}px`,
-					top: `${element.column}px`,
-				}}
-				className='snake'></div>
-		);
-	});
+	return die ? (
+		<GameOver score={score} setStart={setStart} />
+	) : (
+		snake.map((element) => {
+			return (
+				<div
+					style={{
+						width: `${ceilWidth}px`,
+						height: `${ceilWidth}px`,
+						position: "absolute",
+						left: `${element.row}px`,
+						top: `${element.column}px`,
+					}}
+					className='snake'></div>
+			);
+		})
+	);
 }
 
 export default Snake;
